@@ -1,12 +1,13 @@
 import React from 'react'
 
-function NavBar() {
+function NavBar({favNum}) {
+    //const favNum=0;
     return (
         <div className="navBar">
             <a>Library</a>
-            <div className="cart-items">
+            <div className="fav-items">
             Favourites
-            <p className="cart-num">0</p> 
+            <p className="fav-num">{favNum}</p> 
             </div>
        </div>
     );
