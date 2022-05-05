@@ -1,13 +1,18 @@
 import './App.css';
 import NavBar from "./components/NavBar";
 import Books from "./components/Books";
+import Favourite from "./components/Favourite";
 import Footer from "./components/Footer";
+import Contact from "./components/Contact";
+import Home from "./components/Home";
 import {useState} from "react";
+import {BrowserRouter,Routes,Route} from "react-router-dom";
+
 
 function App() {
-  //let favNum=0;
   const [favNum, setFavNum] = useState(0);
-  const books=[
+  const [favBooks, setFavBooks]=useState([]);
+  const [books,setBooks]=useState([
     {
         id:1,
         title:"Rat i mir",
@@ -50,17 +55,47 @@ function App() {
         year: "1954.",
         fav:0,
     },
-];
-function addBookToFavourite(bookId){
-  setFavNum(favNum+1);
+]);
 
+function refreshFavourite(){
+  let favourite=books.filter((book)=>book.fav==1);
+  setFavBooks(favourite);
 }
+
+function addBookToFavourite(bookId){
+  books.map((book)=>{
+    if(book.id===bookId){
+      if(book.fav==0){
+        book.fav=1;
+        setFavNum(favNum+1);
+      }
+    }
+  });
+  refreshFavourite();
+}
+
+function removeBookFromFavourite(bookId){
+  books.map((book)=>{
+    if(book.id===bookId){
+      book.fav=0;
+      setFavNum(favNum-1);
+    }
+  });
+  refreshFavourite();
+}
+
   return (
-    <div className="App" >
+    <BrowserRouter className="App" >
       <NavBar favNum={favNum}/>
-      <Books books={books} addToFavourite={addBookToFavourite}/>
+      <Routes>
+        <Route path="/" element={<Home/>}/>
+        <Route path="/books" element={<Books books={books} addToFavourite={addBookToFavourite}/>}/>
+        <Route path="/favourite" element={<Favourite books={favBooks} removeBookFromFavourite={removeBookFromFavourite}/>}/>
+        <Route path="/contact" element={<Contact/>}/>
+      </Routes>
+      
       <Footer/>
-    </div>
+    </BrowserRouter>
   );
 }
 
